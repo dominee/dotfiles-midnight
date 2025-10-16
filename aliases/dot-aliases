@@ -30,11 +30,6 @@ fi
 # alternative to tail -f
 alias lessf="less +F"
 
-# if eza is installed, use it as the default ls
-if which eza > /dev/null 2>&1; then
-  alias ls="eza --icons=always"
-fi
-
 # List all files colorized in long format
 alias l="ls -lF ${colorflag}"
 alias ll="ls -lahF ${colorflag}"
@@ -44,6 +39,11 @@ alias la="ls -lAF ${colorflag}"
 
 # Always use color output for `ls`
 alias ls="command ls ${colorflag}"
+
+# if eza is installed, use it as the default ls
+if which eza > /dev/null 2>&1; then
+  alias ls="eza --icons=always"
+fi
 
 # Always enable colored `grep` output
 # Note: `GREP_OPTIONS="--color=auto"` is deprecated, hence the alias usage.
@@ -89,7 +89,7 @@ alias map="xargs -n1"
 alias reload="exec ${SHELL} -l"
 
 # generic colouriser
-GRC="$(type -p grc)"
+GRC="$(which grc)"
 if [ "$TERM" != dumb ] && [ -n "$GRC" ]
 then
     alias colourify="$GRC -es --colour=auto"
