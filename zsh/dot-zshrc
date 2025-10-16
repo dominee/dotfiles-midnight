@@ -1,3 +1,9 @@
 # Starship
 eval "$(starship init zsh)"
 
+# Load aliases
+source ~/.aliases
+
+# Start Atuin
+eval "$(atuin init zsh)"
+
