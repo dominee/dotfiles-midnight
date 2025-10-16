@@ -1,0 +1,255 @@
+# Easier navigation: .., ..., ...., ....., ~ and -
+alias ..="cd .."
+alias cd..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+alias ......="cd ../../../../.."
+alias ~="cd ~" # `cd` is probably faster to type though
+alias -- -="cd -"
+
+# Shortcuts
+alias dl="cd ~/Downloads"
+alias dt="cd ~/Desktop"
+alias g="git"
+
+# Detect which `ls` flavor is in use
+if ls --color > /dev/null 2>&1; then # GNU `ls`
+	colorflag="--color"
+	export LS_COLORS='no=00:fi=00:di=01;31:ln=01;36:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arj=01;31:*.taz=01;31:*.lzh=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.gz=01;31:*.bz2=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.jpg=01;35:*.jpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.avi=01;35:*.fli=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.ogg=01;35:*.mp3=01;35:*.wav=01;35:'
+else # macOS `ls`
+	colorflag="-G"
+	export LSCOLORS='BxBxhxDxfxhxhxhxhxcxcx'
+fi
+
+# If nvim is installed, use it as the default vi editor
+if which nvim > /dev/null 2>&1; then
+  alias vi=nvim
+fi
+
+# alternative to tail -f
+alias lessf="less +F"
+
+# if eza is installed, use it as the default ls
+if which eza > /dev/null 2>&1; then
+  alias ls="eza --icons=always"
+fi
+
+# List all files colorized in long format
+alias l="ls -lF ${colorflag}"
+alias ll="ls -lahF ${colorflag}"
+
+# List all files colorized in long format, excluding . and ..
+alias la="ls -lAF ${colorflag}"
+
+# Always use color output for `ls`
+alias ls="command ls ${colorflag}"
+
+# Always enable colored `grep` output
+# Note: `GREP_OPTIONS="--color=auto"` is deprecated, hence the alias usage.
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+
+# Enable aliases to be sudo’ed
+alias sudo='sudo '
+
+# Get week number
+alias week='date +%V'
+
+# Stopwatch
+alias timer='echo "Timer started. Stop with Ctrl-D." && date && time cat && date'
+
+# Dice for the undecided
+alias dice='echo $[ 1 + $RANDOM % 6 ]'
+alias yn='[ $[ $RANDOM % 2 ] == 0 ] && echo "Yes" || echo "No"'
+
+# IP addresses
+alias myip="dig +short myip.opendns.com @resolver1.opendns.com"
+alias ips="ifconfig -a | grep -o 'inet6\? \(addr:\)\?\s\?\(\(\([0-9]\+\.\)\{3\}[0-9]\+\)\|[a-fA-F0-9:]\+\)' | awk '{ sub(/inet6? (addr:)? ?/, \"\"); print }'"
+
+# Canonical hex dump; some systems have this symlinked
+command -v hd > /dev/null || alias hd="hexdump -C"
+
+# macOS has no `md5sum`, so use `md5` as a fallback
+command -v md5sum > /dev/null || alias md5sum="md5"
+
+# macOS has no `sha1sum`, so use `shasum` as a fallback
+command -v sha1sum > /dev/null || alias sha1sum="shasum"
+
+# Recursively delete `.DS_Store` files
+alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"
+
+# Intuitive map function
+# For example, to list all directories that contain a certain file:
+# find . -name .gitattributes | map dirname
+alias map="xargs -n1"
+
+# Reload the shell (i.e. invoke as a login shell)
+alias reload="exec ${SHELL} -l"
+
+# generic colouriser
+GRC="$(type -p grc)"
+if [ "$TERM" != dumb ] && [ -n "$GRC" ]
+then
+    alias colourify="$GRC -es --colour=auto"
+    alias configure='colourify ./configure'
+    alias df='colourify df'
+    alias diff='colourify diff'
+    alias docker='colourify docker'
+    alias docker-machine='colourify docker-machine'
+    alias du='colourify du'
+    alias env='colourify env'
+    alias make='colourify make'
+    alias gcc='colourify gcc'
+    alias g++='colourify g++'
+    alias as='colourify as'
+    alias gas='colourify gas'
+    alias ld='colourify ld'
+    alias netstat='colourify netstat'
+    alias ping='colourify ping'
+    alias traceroute='colourify /usr/sbin/traceroute'
+    alias traceroute6='colourify traceroute6'
+    alias head='colourify head'
+    alias tail='colourify tail'
+    alias dig='colourify dig'
+    alias mount='colourify mount'
+    alias ps='colourify ps'
+    alias mtr='colourify mtr'
+    alias ifconfig='colourify ifconfig'
+fi
+
+
+
+# Get macOS Software Updates, and update installed App Store apps, Ruby gems, Homebrew, npm, and their installed packages
+alias update='sudo -- sh -c "softwareupdate -i -a; /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -license accept ; gem update --system; gem update ; gem cleanup" ; if hash mas 2>/dev/null; then mas upgrade; fi; brew update; brew upgrade; brew cleanup; npm install npm -g; npm update -g; '
+
+# Get local ip address
+alias localip="ipconfig getifaddr $LOCAL_NET_IFACE"
+
+# Lock the screen (when going AFK)
+alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
+
+# Stuff I never really use but cannot delete either because of http://xkcd.com/530/
+alias stfu="osascript -e 'set volume output muted true'"
+alias pumpitup="osascript -e 'set volume output volume 100'"
+
+  # Airport CLI alias
+alias airport='/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport'
+
+# make "ip" an alias to myip (on Linux, ip is a system command)
+alias ip=myip
+
+# random mac address for wifi adapter (sometimes DHCP server stops liking you for a weird reason
+# and this helps)
+alias randmac='sudo ifconfig $LOCAL_NET_IFACE ether `openssl rand -hex 6 | sed "s/\(..\)/\1:/g;s/.$//"`'
+
+# Show active network interfaces
+GRCAT=`which grcat 2>/dev/null`
+if [ "$TERM" != dumb ] && [ -n "$GRCAT" ] && [ -r /usr/local/share/grc/conf.ifconfig ]; then
+    alias ifactive="ifconfig | pcregrep -M -o '^[^\t:]+:([^\n]|\n\t)*status: active' | grcat /usr/local/share/grc/conf.ifconfig"
+else
+    alias ifactive="ifconfig | pcregrep -M -o '^[^\t:]+:([^\n]|\n\t)*status: active'"
+fi
+
+# Flush Directory Service cache
+alias flush="dscacheutil -flushcache && killall -HUP mDNSResponder"
+
+# Clean up LaunchServices to remove duplicates in the “Open With” menu
+alias lscleanup="/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user && killall Finder"
+
+# Trim new lines and copy to clipboard
+alias c="tr -d '\n' | pbcopy"
+
+# Empty the Trash on all mounted volumes and the main HDD.
+# Also, clear Apple’s System Logs to improve shell startup speed.
+# Finally, clear download history from quarantine. https://mths.be/bum
+alias emptytrash="sudo rm -rfv /Volumes/*/.Trashes; sudo rm -rfv ~/.Trash; sudo rm -rfv /private/var/log/asl/*.asl; sqlite3 ~/Library/Preferences/com.apple.LaunchServices.QuarantineEventsV* 'delete from LSQuarantineEvent'"
+
+# Show/hide hidden files in Finder
+alias show="defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder"
+alias hide="defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder"
+
+# Hide/show all desktop icons (useful when presenting)
+alias hidedesktop="defaults write com.apple.finder CreateDesktop -bool false && killall Finder"
+alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && killall Finder"
+
+# Linux users are used to "locate" command
+alias locate="mdfind"
+
+# Print each PATH entry on a separate line
+alias path='echo -e ${PATH//:/\\n}'
+
+# generate password
+alias pw='pwgen -cns -r "yzYZ" -B -1 12 1'
+
+## tcpdump
+alias tcpdump_human='tcpdump -ttttnnvvS'
+alias tcpdump_get="tcpdump -vvAls0 | grep 'GET'"
+alias tcpdump_ssh="tcpdump 'tcp[(tcp[12]>>2):4] = 0x5353482D'"
+
+## wrappers
+alias ssh-nokey='ssh -o PreferredAuthentications=keyboard-interactive -o PubkeyAuthentication=no'
+
+## misc mental notes
+alias hmm="echo '¯\_(ツ)_/¯' | pbcopy"
+alias today="date +%Y%m%d"
+alias epoch='date +"%s"'
+alias mirror='wget --mirror --page-requisites --adjust-extension --no-parent --convert-links ‐‐continue ‐‐no-clobber'
+alias doc_metadata='textutil -info'
+alias trace_fs='fs_usage'
+alias trace_syscalls='sc_usage'
+alias mute='mpc volume 0'
+alias unmute='mpc volume 15'
+alias macaddrs='networksetup -listallhardwareports'
+alias ldir='ls -d */'
+
+
+## cli services
+alias crypto="curl -A Curl rate.sx"
+alias btc="curl -A Curl rate.sx/btc@4w"
+alias xmr="curl -A Curl rate.sx/xmr@4w"
+alias ipconfig-web="curl -s http://ipconfig.io/json | json"
+
+## linux-like
+alias lsusb='ioreg -p IOUSB -w0'
+alias lsusb_io='ioreg -c IOUSBDevice -l -w 0'
+alias lsusb2='system_profiler SPUSBDataType'
+alias lsof_net='sudo lsof -ni -P'
+alias lsmod='sudo kextstat -l'
+alias lsmod_user="sudo kextstat| egrep -iv 'apple|intel|index'"
+alias auditlog='sudo praudit -l /dev/auditpipe'
+alias battery="pmset -g batt | egrep \"([0-9]+\%).*\" -o --colour=auto | cut -f1 -d';'"
+alias resolution="system_profiler SPDisplaysDataType | grep Resolution | sed 's/          Resolution: //g'"
+alias dhcp_info='ipconfig getpacket en0'
+alias wifihistory="defaults read /Library/Preferences/SystemConfiguration/com.apple.airport.preferences | grep LastConnected -A 7 | sed 's/^[ ]*//g'"
+alias wifi_on='networksetup -setairportpower en0 on'
+alias wifi_off='networksetup -setairportpower en0 of'
+
+## Clipboard helpers
+alias clipboard2text='pbpaste | textutil -convert txt -stdin -stdout -encoding 30 | pbcopy'
+alias clipboard_t2s='pbpaste | expand | pbcopy'
+
+# Wifi purge all networks except the ones in the list
+alias wifi-purge="for AP in $(networksetup -listpreferredwirelessnetworks en0 | egrep -v 'en0|Citadelo|hosaka|lameri|Ettin|onyx|Darkness' | sed -e 's/^\t//'); do echo 'Removing $AP'; sudo networksetup -removepreferredwirelessnetwork en0 \"${AP}\"; done"
+
+
+# Network testing
+alias gp="ping -i.2 google.com | ggrep -oP '(?<=time=).*(?=ms)' --line-buffered | asciigraph -r -h `expr $LINES - 2` -w `expr $COLUMNS - 8`"
+function gping() {
+    ping -i.2 "${1}" | ggrep -oP '(?<=time=).*(?=ms)' --line-buffered | asciigraph -r -h `expr $LINES - 2` -w `expr $COLUMNS - 8`
+}
+
+########################### VARS #######################
+# Not in the repository, to prevent people from accidentally committing under my name
+GIT_AUTHOR_NAME="Dominee Fromhell"
+GIT_COMMITTER_NAME="$GIT_AUTHOR_NAME"
+git config --global user.name "$GIT_AUTHOR_NAME"
+GIT_AUTHOR_EMAIL="dominee@hell.sk"
+GIT_COMMITTER_EMAIL="$GIT_AUTHOR_EMAIL"
+git config --global user.email "$GIT_AUTHOR_EMAIL"
+# Golang
+export GOPATH="${HOME}/go"
+export GOROOT="$(brew --prefix golang)/libexec"
+export PATH="$PATH:${GOPATH}/bin:${GOROOT}/bin"
+
